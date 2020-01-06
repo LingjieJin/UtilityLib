@@ -1,63 +1,88 @@
 #include "List.h"
+#include "type.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-static int _add_node_to_head(List *list, ListNode_t *add_node)
+static int _add_node_to_head(List *list, Node32_DP_t *add_node)
 {
     add_node->prev = NULL;
     add_node->next = list->head;
-    list->head->prev = add_node;
+    ((Node32_DP_t *)list->head)->prev = add_node;
     list->head = add_node;
 
     return list->size++;
 }
 
-
-static bool _isEmpty(List *list)
-{
-    if (list->size == 0)
-    {
-        return true;
-    }
-    return false;
-}
-
-static List *_create(int num)
+static List *_Init()
 {
     List *list = (List *)malloc(sizeof(List));
-    ListNode_t *new_node;
-
-    list->head = (ListNode_t *)malloc(sizeof(ListNode_t));
-    if (list->head == NULL)
+    if (list == NULL)
     {
         return NULL;
     }
+    list->head = list->tail = NULL;
+    list->size = 0;
+    return list;
+}
 
-    list->tail = list->head;
-    list->head->prev = list->head->next = NULL;
+static List *_Create(int num)
+{
+    List *list = _Init();
 
-    for (int i = 1; i < num; i++)
+    for (int i = 0; i < num; i++)
     {
-        new_node = (ListNode_t *)malloc(sizeof(ListNode_t));
+        Node32_DP_t *new_node = (Node32_DP_t *)malloc(sizeof(Node32_DP_t));
         if (new_node == NULL)
         {
             return NULL;
         }
-        new_node->prev = list->tail;
-        list->tail->next = new_node;
-        new_node->next = NULL;
+        new_node->prev = new_node->next = NULL;
+        new_node->elemData._uint32 = 0;
+
+        if (list->head == NULL)
+        {
+            list->head = new_node;
+        }
+        else
+        {
+            ((Node32_DP_t *)list->tail)->next = new_node;
+            new_node->prev = list->tail;
+        }
+
         list->tail = new_node;
     }
+
     list->size = num;
     return list;
 }
 
-static ListNode_t *_select_node(List *list, int index)
+static bool _Destory(List *list)
 {
-    if (list->size < index)
+    Node32_DP_t *cursor;
+    for (int i = 0; i < list->size; i++)
+    {
+        cursor = (Node32_DP_t *)list->head;
+        list->head = ((Node32_DP_t *)list->head)->next;
+        free(cursor);
+    }
+
+    free(list);
+    return true;
+}
+
+static bool _isEmpty(List *list)
+{
+    return list->size == 0;
+}
+
+static Node *_Select(List *list, int index)
+{
+    if (list->size <= index)
     {
         return NULL;
     }
 
-    ListNode_t *node = list->head;
+    Node32_DP_t *node = (Node32_DP_t *)list->head;
     for (int i = 0; i < index; i++)
     {
         node = node->next;
@@ -66,46 +91,79 @@ static ListNode_t *_select_node(List *list, int index)
     return node;
 }
 
-static int _append_node_to_list(List *list, ListNode_t *add_node)
+static int _Append(List *list, Node *add_node)
 {
-    add_node->next = NULL;
-    add_node->prev = list->tail;
-    list->tail->next = add_node;
+    if (list->head == NULL)
+    {
+        list->head = add_node;
+    }
+    else
+    {
+        ((Node32_DP_t *)list->tail)->next = add_node;
+        ((Node32_DP_t *)add_node)->prev = (Node32_DP_t *)list->tail;
+    }
     list->tail = add_node;
 
     return list->size++;
 }
 
-static int _insert_node_to_list(List *list, ListNode_t *add_node, int index)
+static int _Insert(List *list, Node *add_node, int index)
 {
-    if (list->size < index)
+    if (list->size <= index)
     {
         return 0;
     }
 
-    ListNode_t *node = list->head;
+    Node32_DP_t *node = list->head;
 
     for (int i = 0; i < index; i++)
     {
         node = node->next;
     }
 
-    add_node->prev = node;
-    add_node->next = node->next;
-    node->next->prev = add_node;
-    node->next = add_node;
+    if (index == 0)
+    {
+        node->prev = add_node;
+        ((Node32_DP_t *)add_node)->next = node;
+        list->head = add_node;
+    }
+    else
+    {
+        ((Node32_DP_t *)add_node)->prev = node->prev->next;
+        ((Node32_DP_t *)add_node)->next = node;
+        node->prev->next = add_node;
+        node->prev = add_node;
+    }
 
     return list->size++;
 }
 
-static ListNode_t *_delete_node_in_list(List *list, int index)
+static Node *_Remove(List *list)
+{
+    if (_isEmpty(list))
+    {
+        return NULL;
+    }
+    Node32_DP_t *end = ((Node32_DP_t *)list->tail)->prev;
+    Node32_DP_t *ret = (Node32_DP_t *)list->tail;
+
+    end->next = NULL;
+    list->tail = end;
+
+    // list->tail = ((Node32_DP_t *)list->tail)->prev;
+    // ((Node32_DP_t *)list->tail)->next = NULL;
+    list->size--;
+    return ret;
+}
+
+static Node *_Delete(List *list, int index)
 {
     if (list->size < index)
     {
         return NULL;
     }
 
-    ListNode_t *node = list->head;
+    Node32_DP_t *node = list->head;
 
     for (int i = 0; i < index; i++)
     {
@@ -118,22 +176,24 @@ static ListNode_t *_delete_node_in_list(List *list, int index)
     return node;
 }
 
-static void _show_list(List *list)
+static void _Show(List *list)
 {
 }
 
-static void _sort_list(List *list, int (*comp)(const void *, const void *))
+static void _Sort(List *list, int (*comp)(const void *, const void *))
 {
-
 }
 
 const ListAPI _Dlist_api = {
+    _Init,
+    _Create,
+    _Destory,
     _isEmpty,
-    _create,
-    _select_node,
-    _append_node_to_list,
-    _insert_node_to_list,
-    _delete_node_in_list,
-    _show_list,
-    _sort_list,
+    _Select,
+    _Append,
+    _Insert,
+    _Remove,
+    _Delete,
+    _Show,
+    _Sort,
 };

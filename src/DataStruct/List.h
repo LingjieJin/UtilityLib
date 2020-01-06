@@ -1,37 +1,37 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct _ListNode_t
-{
-    struct _ListNode_t *prev;
-    struct _ListNode_t *next;
-    union {
-        uint32_t _uint32_data;
-        float _float_data;
-        void *_any_data;
-    } ElemData;
-} ListNode_t, *PListNode_t;
+typedef void Node;
 
-typedef struct _List
+typedef struct _ListAbstract
 {
     int size;
-    ListNode_t *head;
-    ListNode_t *tail;
+    Node *head;
+    Node *tail;
 } List;
 
 typedef struct _ListAPI
 {
-    bool (*isEmpty)(List *list);
+    /* Init a empty list */
+    List *(*Init)();
+    /* Create a list of a specified size */
     List *(*Creat)(int num);
-    ListNode_t *(*Select)(List *list, int index);
-    int (*Append_to_list)(List *list, ListNode_t *add_ListNode_t);
-    int (*Insert_to_list)(List *list, ListNode_t *add_ListNode_t, int index);
-    ListNode_t *(*Delete_ListNode_t_in_list)(List *list, int index);
-    void (*Show_list)(List *list);
-
-    bool (*Sort_list)(List *list, int (*comp)(const void *, const void *));
+    /* Destroy a list */
+    bool (*Destroty)(List *list);
+    /* Whether the list is empty */
+    bool (*isEmpty)(List *list);
+    /* Select a Node */
+    Node *(*Select)(List *list, int index);
+    /* Append a Node */
+    int (*Append)(List *list, Node *node);
+    /** Forward Insert a Node
+     * list must already have elements
+     */
+    int (*Insert)(List *list, Node *node, int index);
+    Node *(*Remove)(List *list);
+    Node *(*Delete)(List *list, int index);
+    void (*Show)(List *list);
+    bool (*Sort)(List *list, int (*comp)(const void *, const void *));
 } ListAPI;
 
 const ListAPI _Dlist_api;

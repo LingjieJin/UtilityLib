@@ -1,14 +1,13 @@
 #include "Stack.h"
-#include <stdbool.h>
 
-static bool _Push(Stack *stack, S_Node_t *add_node);
+static bool _Push(LS_Stack *stack, S_Node_t *add_node);
 
-static Stack *_Create(int num)
+static LS_Stack *_Create(int num)
 {
     if (num < 0)
         return NULL;
 
-    Stack *new_stack = (Stack *)malloc(sizeof(Stack));
+    LS_Stack *new_stack = (LS_Stack *)malloc(sizeof(LS_Stack));
     new_stack->size = 0;
     new_stack->top = NULL;
     if (num > 0)

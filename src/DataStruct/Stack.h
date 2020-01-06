@@ -1,41 +1,30 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include "type.h"
 
-typedef struct _S_Node_t
-{
-    /* next指向栈底 */
-    struct _S_Node_t *next;
-    union {
-        uint32_t _uint32_data;
-        void *_p_data;
-    } ElemData;
-} S_Node_t;
-
-typedef struct _Stack
+typedef struct _LS_Stack
 {
     int size;
-    S_Node_t *top;
-} Stack;
+    Node32_SP_t *top;
+} LS_Stack;
 
-typedef struct _StackAPI
+typedef struct _LS_StackAPI
 {
     /* 按照输入大小初始化 */
-    Stack *(*Create)(int num);
+    LS_Stack *(*Create)(int num);
     /* 销毁指定栈的内存 */
-    bool (*Destroy)(Stack *stack);
+    bool (*Destroy)(LS_Stack *stack);
     /* 将指定栈清空 即大小重置为0 */
-    bool (*Clear)(Stack *stack);
+    bool (*Clear)(LS_Stack *stack);
     /* 删除栈顶元素 并返回该元素 如不需要请手动删除  */
-    S_Node_t *(*Pop)(Stack *Stack);
+    Node32_SP_t *(*Pop)(LS_Stack *Stack);
     /* 压栈 */
-    bool (*Push)(Stack *stack, S_Node_t *add_node);
+    bool (*Push)(LS_Stack *stack, Node32_SP_t *add_node);
     /* 返回栈顶元素 */
-    S_Node_t *(*Peek)(Stack *stack);
+    Node32_SP_t *(*Peek)(LS_Stack *stack);
     /* 判断栈是否为空 */
-    bool (*isEmpty)(Stack *stack);
-} StackAPI;
+    bool (*isEmpty)(LS_Stack *stack);
+} LS_StackAPI;
 
 /* 保存实现函数 通过结构体调用 */
-const StackAPI _stack_api;
+const LS_StackAPI _stack_api;
