@@ -114,7 +114,7 @@ static int _Insert(List *list, Node *add_node, int index)
         return 0;
     }
 
-    Node32_DP_t *node = list->head;
+    Node32_DP_t *node = (Node32_DP_t *)list->head;
 
     for (int i = 0; i < index; i++)
     {
@@ -123,16 +123,16 @@ static int _Insert(List *list, Node *add_node, int index)
 
     if (index == 0)
     {
-        node->prev = add_node;
+        node->prev = (Node32_DP_t *)add_node;
         ((Node32_DP_t *)add_node)->next = node;
-        list->head = add_node;
+        list->head = (Node32_DP_t *)add_node;
     }
     else
     {
-        ((Node32_DP_t *)add_node)->prev = node->prev->next;
+        ((Node32_DP_t *)add_node)->prev = node->prev;
         ((Node32_DP_t *)add_node)->next = node;
-        node->prev->next = add_node;
-        node->prev = add_node;
+        node->prev->next = (Node32_DP_t *)add_node;
+        node->prev = (Node32_DP_t *)add_node;
     }
 
     return list->size++;
