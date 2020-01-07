@@ -1,37 +1,48 @@
-#include "Stack.h"
+#include "StackAbstract.h"
+#include "type.h"
 
-static bool _Push(LS_Stack *stack, S_Node_t *add_node);
+#include <stdio.h>
+#include <stdlib.h>
 
-static LS_Stack *_Create(int num)
+static bool _Push(Stack *stack, Node *add_node);
+static Node *_Pop(Stack *stack);
+
+static Stack *_Init()
 {
-    if (num < 0)
+    Stack *stack = (Stack *)malloc(sizeof(Stack));
+    stack->size = 0;
+    stack->top = NULL;
+    return stack;
+}
+
+static Stack *_Create(int num)
+{
+    if (num <= 0)
         return NULL;
 
-    LS_Stack *new_stack = (LS_Stack *)malloc(sizeof(LS_Stack));
-    new_stack->size = 0;
-    new_stack->top = NULL;
-    if (num > 0)
+    Stack *stack = _Init();
+
+    while (num)
     {
-        while (num)
-        {
-            S_Node_t *new_node = (S_Node_t *)malloc(sizeof(S_Node_t));
-            new_node->next = NULL;
-            new_node->ElemData._uint32_data = 0;
-            _Push(new_stack, new_node);
-            num--;
-        }
+        Node32_SP_t *new_node = (Node32_SP_t *)malloc(sizeof(Node32_SP_t));
+        new_node->next = NULL;
+        new_node->elemData._uint32 = 0;
+        _Push(stack, new_node);
+
+        num--;
     }
-    return new_stack;
+
+    return stack;
 }
 
 static bool _Destroy(Stack *stack)
 {
-    S_Node_t *next = stack->top->next;
+    Node32_SP_t *temp;
+
     while (stack->top != NULL)
     {
-        free(stack->top);
-        stack->top = next;
-        next = next->next;
+        temp = (Node32_SP_t *)_Pop(stack);
+        free(temp);
     }
 
     free(stack);
@@ -41,55 +52,57 @@ static bool _Destroy(Stack *stack)
 
 static bool _Clear(Stack *stack)
 {
-    S_Node_t *next = stack->top->next;
+    Node32_SP_t *temp;
+
     while (stack->top != NULL)
     {
-        free(stack->top);
-        stack->top = next;
-        next = next->next;
+        temp = (Node32_SP_t *)_Pop(stack);
+        free(temp);
     }
 
     return true;
 }
 
-static S_Node_t *_Pop(Stack *stack)
+static bool _Push(Stack *stack, Node *add_node)
 {
-    if (stack->size == 0)
-    {
-        return NULL;
-    }
-    S_Node_t *temp = stack->top;
-    stack->top = stack->top->next;
-
-    stack->size--;
-    return temp;
-}
-
-static bool _Push(Stack *stack, S_Node_t *add_node)
-{
-    add_node->next = stack->top;
-    stack->top = add_node;
+    ((Node32_SP_t *)add_node)->next = (Node32_SP_t *)stack->top;
+    stack->top = (Node32_SP_t *)add_node;
 
     stack->size++;
     return true;
 }
 
-static S_Node_t *_Peek(Stack *stack)
+static Node *_Pop(Stack *stack)
+{
+    if (stack->size <= 0)
+    {
+        return NULL;
+    }
+
+    Node32_SP_t *temp = stack->top;
+    stack->top = ((Node32_SP_t *)stack->top)->next;
+
+    stack->size--;
+    return temp;
+}
+
+static Node *_Peek(Stack *stack)
 {
     return stack->top == NULL ? NULL : stack->top;
 }
 
 static bool _isEmpty(Stack *stack)
 {
-    return stack->size == 0 ? true : false;
+    return (stack->size == 0);
 }
 
-const StackAPI _stack_api = {
+const StackAPI _ls_stack_api = {
+    _Init,
     _Create,
     _Destroy,
     _Clear,
-    _Pop,
     _Push,
+    _Pop,
     _Peek,
     _isEmpty,
 };

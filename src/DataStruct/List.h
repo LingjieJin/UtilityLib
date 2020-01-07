@@ -2,13 +2,14 @@
 #include <stdbool.h>
 
 typedef void Node;
+typedef void *PNode;
 
 typedef struct _ListAbstract
 {
     int size;
     Node *head;
     Node *tail;
-} List;
+} List, *PList;
 
 typedef struct _ListAPI
 {
