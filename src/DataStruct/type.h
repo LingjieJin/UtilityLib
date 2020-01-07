@@ -1,3 +1,6 @@
+#ifndef TYPE_H
+#define TYPE_H
+
 #include <stdint.h>
 
 typedef union UnionData_32 {
@@ -18,3 +21,5 @@ typedef struct _Node_32_DP
     struct _Node_32_DP *next;
     UData32_t elemData;
 } Node32_DP_t;
+
+#endif

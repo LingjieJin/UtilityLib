@@ -1,15 +1,27 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "type.h"
+
 typedef void Node;
 typedef void *PNode;
+typedef void List;
+typedef void *PList;
+
+typedef struct _ArrayList
+{
+    int front;
+    int rear;
+    int MaxSize;
+    UData32_t *array;
+} ArrayList, *PArrayList;
 
 typedef struct _ListAbstract
 {
     int size;
     Node *head;
     Node *tail;
-} List, *PList;
+} LinkList, *PLinkList;
 
 typedef struct _ListAPI
 {

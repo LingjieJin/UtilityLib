@@ -1,21 +1,11 @@
-#include "List.h"
+#include "ListAbstract.h"
 #include "type.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-static int _add_node_to_head(List *list, Node32_DP_t *add_node)
-{
-    add_node->prev = NULL;
-    add_node->next = list->head;
-    ((Node32_DP_t *)list->head)->prev = add_node;
-    list->head = add_node;
-
-    return list->size++;
-}
-
 static List *_Init()
 {
-    List *list = (List *)malloc(sizeof(List));
+    LinkList *list = (LinkList *)malloc(sizeof(LinkList));
     if (list == NULL)
     {
         return NULL;
@@ -27,7 +17,7 @@ static List *_Init()
 
 static List *_Create(int num)
 {
-    List *list = _Init();
+    LinkList *list = _Init();
 
     for (int i = 0; i < num; i++)
     {
@@ -59,30 +49,30 @@ static List *_Create(int num)
 static bool _Destory(List *list)
 {
     Node32_DP_t *cursor;
-    for (int i = 0; i < list->size; i++)
+    for (int i = 0; i < ((LinkList *)list)->size; i++)
     {
-        cursor = (Node32_DP_t *)list->head;
-        list->head = ((Node32_DP_t *)list->head)->next;
+        cursor = (Node32_DP_t *)((LinkList *)list)->head;
+        ((LinkList *)list)->head = ((Node32_DP_t *)((LinkList *)list)->head)->next;
         free(cursor);
     }
 
-    free(list);
+    free(((LinkList *)list));
     return true;
 }
 
 static bool _isEmpty(List *list)
 {
-    return list->size == 0;
+    return ((LinkList *)list)->size == 0;
 }
 
 static Node *_Select(List *list, int index)
 {
-    if (list->size <= index)
+    if (((LinkList *)list)->size <= index)
     {
         return NULL;
     }
 
-    Node32_DP_t *node = (Node32_DP_t *)list->head;
+    Node32_DP_t *node = (Node32_DP_t *)((LinkList *)list)->head;
     for (int i = 0; i < index; i++)
     {
         node = node->next;
@@ -93,28 +83,28 @@ static Node *_Select(List *list, int index)
 
 static int _Append(List *list, Node *add_node)
 {
-    if (list->head == NULL)
+    if (((LinkList *)list)->head == NULL)
     {
-        list->head = add_node;
+        ((LinkList *)list)->head = (Node32_DP_t *)add_node;
     }
     else
     {
-        ((Node32_DP_t *)list->tail)->next = add_node;
-        ((Node32_DP_t *)add_node)->prev = (Node32_DP_t *)list->tail;
+        ((Node32_DP_t *)((LinkList *)list)->tail)->next = (Node32_DP_t *)add_node;
+        ((Node32_DP_t *)add_node)->prev = (Node32_DP_t *)((LinkList *)list)->tail;
     }
-    list->tail = add_node;
+    ((LinkList *)list)->tail = add_node;
 
-    return list->size++;
+    return ((LinkList *)list)->size++;
 }
 
 static int _Insert(List *list, Node *add_node, int index)
 {
-    if (list->size <= index)
+    if (((LinkList *)list)->size <= index)
     {
         return 0;
     }
 
-    Node32_DP_t *node = (Node32_DP_t *)list->head;
+    Node32_DP_t *node = (Node32_DP_t *)((LinkList *)list)->head;
 
     for (int i = 0; i < index; i++)
     {
@@ -125,7 +115,7 @@ static int _Insert(List *list, Node *add_node, int index)
     {
         node->prev = (Node32_DP_t *)add_node;
         ((Node32_DP_t *)add_node)->next = node;
-        list->head = (Node32_DP_t *)add_node;
+        ((LinkList *)list)->head = (Node32_DP_t *)add_node;
     }
     else
     {
@@ -135,7 +125,7 @@ static int _Insert(List *list, Node *add_node, int index)
         node->prev = (Node32_DP_t *)add_node;
     }
 
-    return list->size++;
+    return ((LinkList *)list)->size++;
 }
 
 static Node *_Remove(List *list)
@@ -144,26 +134,24 @@ static Node *_Remove(List *list)
     {
         return NULL;
     }
-    Node32_DP_t *end = ((Node32_DP_t *)list->tail)->prev;
-    Node32_DP_t *ret = (Node32_DP_t *)list->tail;
+    Node32_DP_t *end = ((Node32_DP_t *)((LinkList *)list)->tail)->prev;
+    Node32_DP_t *ret = (Node32_DP_t *)((LinkList *)list)->tail;
 
     end->next = NULL;
-    list->tail = end;
+    ((LinkList *)list)->tail = end;
 
-    // list->tail = ((Node32_DP_t *)list->tail)->prev;
-    // ((Node32_DP_t *)list->tail)->next = NULL;
-    list->size--;
+    ((LinkList *)list)->size--;
     return ret;
 }
 
 static Node *_Delete(List *list, int index)
 {
-    if (list->size < index)
+    if (((LinkList *)list)->size < index)
     {
         return NULL;
     }
 
-    Node32_DP_t *node = list->head;
+    Node32_DP_t *node = ((LinkList *)list)->head;
 
     for (int i = 0; i < index; i++)
     {

@@ -4,13 +4,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "Queue.h"
+#include "type.h"
+#include "QueueAbstract.h"
 
 int main()
 {
     srand(time(0));
-    LQ_Query *queue = lq_queue_api.Create(100);
-    if(queue == NULL)
+    ListQueue *queue = _lq_queue_api.Create(100);
+
+    if (queue == NULL)
     {
         printf("cant create queue!\n");
         return 0;
@@ -20,7 +22,7 @@ int main()
     {
         Node32_SP_t *new_node = (Node32_SP_t *)malloc(sizeof(Node32_SP_t));
         new_node->elemData._uint32 = rand() % 100;
-        lq_queue_api.Entry(queue, new_node);
+        _lq_queue_api.Enqueue(queue, new_node);
     }
 
     Node32_SP_t *cursor = queue->front;
@@ -30,9 +32,9 @@ int main()
         cursor = cursor->next;
     }
 
-    UData32_t get_1 = lq_queue_api.GetFront(queue)->elemData;
-    UData32_t get_2 = lq_queue_api.GetRear(queue)->elemData;
-    int size = lq_queue_api.GetSize(queue);
+    UData32_t get_1 = ((Node32_SP_t *)_lq_queue_api.GetFront(queue))->elemData;
+    UData32_t get_2 = ((Node32_SP_t *)_lq_queue_api.GetRear(queue))->elemData;
+    int size = _lq_queue_api.GetSize(queue);
     printf("front %d, rear %d, size %d.\n", get_1._uint32, get_2._uint32, size);
 
     return 0;

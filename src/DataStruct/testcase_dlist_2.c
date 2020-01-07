@@ -1,5 +1,5 @@
-#include "List.h"
 #include "type.h"
+#include "ListAbstract.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +12,7 @@ int main()
     Node32_DP_t *new_node;
 
     /* Unit test */
-    List *list = _Dlist_api.Creat(5);
+    LinkList *list = _Dlist_api.Creat(5);
 
     printf("Append test--------------------------------\n");
 
