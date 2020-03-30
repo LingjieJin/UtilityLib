@@ -7,7 +7,7 @@
 
 void sayHello(int n)
 {
-    std::cout<<" I am "<<n <<" ."<<std::endl;
+    std::cout << " I am " << n << " ." << std::endl;
 }
 
 void thread_pause()
@@ -18,52 +18,49 @@ void thread_pause()
     std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(500));
 }
 
-auto fn=[](int *a){
+auto fn = [](int *a) {
     for (size_t i = 0; i < 10; i++)
     {
-        std::cout<< *a <<std::endl;
+        std::cout << *a << std::endl;
     }
-    
 };
 
 /* 资源获取即初始化（RAII,Resource Acquisition Is Initialization) */
 class thread_guard
 {
-	std::thread &t;
-public :
-	explicit thread_guard(std::thread& _t) :
-		t(_t){}
+    std::thread &t;
 
-	~thread_guard()
-	{
-		if (t.joinable())
-			t.join();
-	}
+public:
+    explicit thread_guard(std::thread &_t) : t(_t) {}
 
-	thread_guard(const thread_guard&) = delete;
-	thread_guard& operator=(const thread_guard&) = delete;
+    ~thread_guard()
+    {
+        if (t.joinable())
+            t.join();
+    }
+
+    thread_guard(const thread_guard &) = delete;
+    thread_guard &operator=(const thread_guard &) = delete;
 };
-
-
 
 int main()
 {
     /* */
-    std::cout<<"1. general function:"<<std::endl;
+    std::cout << "1. general function:" << std::endl;
     for (size_t i = 0; i < 10; i++)
     {
-        std::thread t(sayHello,i);
+        std::thread t(sayHello, i);
         t.detach();
     }
 
     /**/
-    std::cout<<"2. lambda function:"<<std::endl;
+    std::cout << "2. lambda function:" << std::endl;
     for (size_t i = 0; i < 5; i++)
     {
-        std::thread t([i]{std::cout<<i<<std::endl;});
+        std::thread t([i] { std::cout << i << std::endl; });
         t.detach();
     }
-    
+
     /**
      *  
      * 使用引用变量会出现问题
@@ -72,15 +69,15 @@ int main()
      * 如果线程继续使用局部变量的引用或者指针，会出现意想不到的错误
      */
     {
-        int a =100;
+        int a = 100;
         std::thread t(fn, &a);
         t.detach();
     }
-    
+
     /*无论是何种情况，当函数退出时，局部变量g调用其析构函数销毁，从而能够保证join一定会被调用*/
     {
-        std::thread t([]{
-            std::cout << "Hello thread" <<std::endl ;
+        std::thread t([] {
+            std::cout << "Hello thread" << std::endl;
         });
         thread_guard g(t);
     }
@@ -92,7 +89,7 @@ int main()
      * 如果调用join前出现了异常，thread被销毁，线程就会被异常所终结
      * 即使当线程函数已经执行完成后，调用join仍然是有效的。*/
     {
-        std::thread t([]{
+        std::thread t([] {
             std::cout << "hello C++ 11" << std::endl;
         });
         try
