@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <mutex>
 // time library
 #include <chrono>
 
@@ -42,6 +43,26 @@ public:
     thread_guard(const thread_guard &) = delete;
     thread_guard &operator=(const thread_guard &) = delete;
 };
+
+int increase(int *p, int times)
+{
+    for (size_t i = 0; i < times; i++)
+    {
+        ++*p;
+    }
+    return 0;
+}
+
+int increase_mutex(int *num, int times, std::mutex &mtx)
+{
+    for (size_t i = 0; i < times; i++)
+    {
+        mtx.lock();
+        ++*num;
+        mtx.unlock();
+    }
+    return 0;
+}
 
 int main()
 {
@@ -108,6 +129,47 @@ int main()
     {
         std::thread thread(thread_pause);
         thread.join();
+    }
+
+    /* 对num进行没有加锁的操作，输出在10000-20000之间，同时说明++num操作不是原子的 */
+    std::cout << "没有加锁操作下num：" << std::endl;
+    {
+        int num = 0;
+        std::thread t1(increase, &num, 10000);
+        std::thread t2(increase, &num, 10000);
+        std::thread t3(increase, &num, 10000);
+        std::thread t4(increase, &num, 10000);
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        std::cout << "num=" << num << std::endl;
+    }
+
+    /* 对num进行没有加锁的操作，输出在10000-20000之间，同时说明++num操作不是原子的 */
+    std::cout << "加锁操作下num：" << std::endl;
+    {
+        int num = 0;
+        std::mutex mtx;
+        std::thread t1([&]() {
+            for (size_t i = 0; i < 10000; i++)
+            {
+                mtx.lock();
+                ++num;
+                mtx.unlock();
+            }
+        });
+
+        std::thread t2([&]() {
+            increase_mutex(&num, 10000, mtx);
+        });
+
+        // ??????
+        // std::thread t3(increase_mutex, &num, 10000, &mtx);
+
+        t1.join();
+        t2.join();
+        std::cout << "num=" << num << std::endl;
     }
 
     return 0;
