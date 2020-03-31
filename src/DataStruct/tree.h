@@ -79,3 +79,51 @@ BST_t *SearchBST_MAX(BST_t *tree)
     else
         return SearchBST_MAX(tree);
 }
+
+/**
+ * 前序遍历
+ * root->left->right
+ */
+void PreOrderTraverse(BST_t *tree)
+{
+    if (tree != NULL)
+    {
+        printf("%d", tree->data);
+        PreOrderTraverse(tree->left);
+        PreOrderTraverse(tree->right);
+    }
+}
+
+int NoPreOrderTraverse(BST_t *tree)
+{
+    
+}
+
+
+/**
+ * 中序遍历
+ * left->root->right
+ */
+void InOrderTraverse(BST_t *tree)
+{
+    if (tree != NULL)
+    {
+        InOrderTraverse(tree->left);
+        printf("%d", tree->data);
+        InOrderTraverse(tree->right);
+    }
+}
+
+/**
+ * 后序遍历
+ * left->right->root
+ */
+void PostOrderTraverse(BST_t *tree)
+{
+    if (tree != NULL)
+    {
+        PostOrderTraverse(tree->left);
+        PostOrderTraverse(tree->right);
+        printf("%d", tree->data);
+    }
+}
