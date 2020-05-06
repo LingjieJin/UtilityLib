@@ -3,11 +3,14 @@
 
 #include <vector>
 
+#include <cmath>
+
+template <class T>
 class CPoint
 {
 public:
-    double _x;
-    double _y;
+    T _x;
+    T _y;
 
     CPoint()
     {
@@ -15,32 +18,50 @@ public:
         _y = 0;
     }
 
-    CPoint(double x, double y)
+    CPoint(T x, T y)
     {
         _x = x;
         _y = y;
     }
 
-    CPoint(const CPoint &p)
+    CPoint(const CPoint<T> &p)
     {
         _x = p._x;
         _y = p._y;
     }
 
-    CPoint& operator=(const CPoint &p)
+    CPoint<T> operator+(const CPoint<T> &p) const
+    {
+        _x += p._x;
+        _y += p._y;
+    }
+
+    CPoint<T> &operator=(const CPoint<T> &p) const
     {
         _x = p._x;
         _y = p._y;
+    }
+
+    bool operator==(const CPoint<T> &point) const
+    {
+        return ((fabs(_x - point._x) < 1e-8) && (fabs(_y - point._y) < 1e-8));
+    }
+
+    bool operator<(const CPoint<T> &point) const
+    {
+        return (_x < point._x);
     }
 
     ~CPoint() {}
 };
 
+template <class T>
 class CLine
 {
 public:
-    CPoint _p1;
-    CPoint _p2;
+    CPoint<T> _p1;
+    CPoint<T> _p2;
+    
     CLine()
     {
         _p1._x = 0;
@@ -49,7 +70,15 @@ public:
         _p2._y = 0;
     }
 
-    CLine(double x1, double y1, double x2, double y2)
+    CLine<T>()
+    {
+        _p1._x = 0;
+        _p1._y = 0;
+        _p2._x = 0;
+        _p2._y = 0;
+    }
+
+    CLine<T>(T x1, T y1, T x2, T y2)
     {
         _p1._x = x1;
         _p1._y = y1;
@@ -57,7 +86,7 @@ public:
         _p2._y = y2;
     }
 
-    CLine(const CPoint &p1, const CPoint &p2)
+    CLine<T>(const CPoint<T> &p1, const CPoint<T> &p2)
     {
         _p1._x = p1._x;
         _p1._y = p1._y;
@@ -68,27 +97,39 @@ public:
     ~CLine() {}
 };
 
+template <class T>
+class CTriangle
+{
+    public:
+    CPoint<T> _p1;
+    CPoint<T> _p2;
+    CPoint<T> _p3;
+
+    CTriangle();
+};
+
+template <class T>
 class CRect
 {
 public:
-    CPoint p_min, p_max;
+    CPoint<T> p_min, p_max;
 
     CRect()
     {
-        p_min = CPoint();
-        p_max = CPoint();
+        p_min = CPoint<double>(0.0, 0.0);
+        p_max = CPoint<double>(0.0, 0.0);
     }
 
-    CRect(double pmin_x, double pmin_y, double pmax_x, double pmax_y)
+    CRect(T pmin_x, T pmin_y, T pmax_x, T pmax_y)
     {
-        p_min = CPoint(pmin_x, pmin_y);
-        p_max = CPoint(pmax_x, pmax_y);
+        p_min = CPoint<T>(pmin_x, pmin_y);
+        p_max = CPoint<T>(pmax_x, pmax_y);
     }
 
-    CRect(CPoint &pmin, CPoint &pmax)
+    CRect(CPoint<T> &pmin, CPoint<T> &pmax)
     {
-        p_min = CPoint(pmin);
-        p_max = CPoint(pmax);
+        p_min = CPoint<T>(pmin);
+        p_max = CPoint<T>(pmax);
     }
 
     CRect(const CRect &rect)
@@ -97,31 +138,32 @@ public:
         p_max = rect.p_max;
     }
 
-    CRect& operator=(const CRect &rect)
+    CRect &operator=(const CRect &rect)
     {
         p_min = rect.p_min;
         p_max = rect.p_max;
     }
 };
 
+template <class T>
 class CPolygon
 {
 public:
-    std::vector<CPoint> _vecPoints;
+    std::vector<CPoint<T>> _vecPoints;
 
     CPolygon() {}
 
-    CPolygon(std::vector<CPoint> &points)
+    CPolygon(std::vector<CPoint<T>> &points)
     {
-        _vecPoints = std::vector<CPoint>(points);
+        _vecPoints = std::vector<CPoint<T>>(points);
     }
 
     CPolygon(CPolygon &polygon)
     {
-        _vecPoints = std::vector<CPoint>(polygon._vecPoints);
+        _vecPoints = std::vector<CPoint<T>>(polygon._vecPoints);
     }
 
-    ~CPolygon(){}
+    ~CPolygon() {}
 };
 
 #endif

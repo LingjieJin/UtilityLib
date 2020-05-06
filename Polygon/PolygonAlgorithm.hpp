@@ -274,6 +274,38 @@ public:
         }
         return CRect(minx, miny, maxx, maxy);
     }
+
+    virtual bool getCrossPoint(const CPoint &p1, const CPoint &p2, const CPoint &q1, const CPoint &q2, long &x, long &y)
+    {
+        /**
+        求线段P1P2与Q1Q2的交点。
+        先进行快速排斥实验和跨立实验确定有交点再进行计算。
+        交点（x,y）使用引用返回。
+        没有验证过
+        **/
+        if (isLineIntersect(p1, p2, q1, q2))
+        {
+            //求交点
+            long tmpLeft, tmpRight;
+            tmpLeft = (q2._x - q1._x) * (p1._y - p2._y) 
+                        - (p2._x - p1._x) * (q1._y - q2._y);
+            tmpRight = (p1._y - q1._y) * (p2._x - p1._x) * (q2._x - q1._x) 
+                    + q1._x * (q2._y - q1._y) * (p2._x - p1._x) 
+                    - p1._x * (p2._y - p1._y) * (q2._x - q1._x);
+
+            x = (int)((double)tmpRight / (double)tmpLeft);
+
+            tmpLeft = (p1._x - p2._x) * (q2._y - q1._y) 
+                    - (p2._y - p1._y) * (q1._x - q2._x);
+            tmpRight = p2._y * (p1._x - p2._x) * (q2._y - q1._y) 
+                    + (q2._x - p2._x) * (q2._y - q1._y) * (p1._y - p2._y) 
+                    - q2._y * (q1._x - q2._x) * (p2._y - p1._y);
+            y = (int)((double)tmpRight / (double)tmpLeft);
+
+            return true;
+        }
+        return false;
+    }
 };
 
 class ISpPolygonAlgorithm : public IPolygonAlgorithmBase
