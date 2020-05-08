@@ -8,12 +8,12 @@
 class CGraphNode
 {
 public:
+    std::vector<CGraphNode *> m_relation;
+    void* content;
+    bool visited;
+    
     CGraphNode() { visited = 0; content = NULL;}
     ~CGraphNode() {}
-
-    void* content;
-    std::vector<CGraphNode *> m_relation;
-    bool visited;
 
     static void visitedByBFS(CGraphNode *node);
     static void spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<std::vector<CGraphNode *>> &sets);

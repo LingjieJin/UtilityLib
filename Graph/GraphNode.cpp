@@ -32,17 +32,6 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
     // copy elements
     std::vector<CGraphNode *> copy = graph;
 
-    for (int i = 0; i < graph.size(); i++)
-    {
-        printf("graph %d x: %f, y:%f\n",i, (((CPoint<double>*)graph[i]->content)->_x,((CPoint<double>*)graph[i]->content)->_y));
-    }
-
-    for (int i = 0; i < copy.size(); i++)
-    {
-        printf("copy %d x: %f, y:%f\n",i, (((CPoint<double>*)copy[i]->content)->_x,((CPoint<double>*)copy[i]->content)->_y));
-    }
-    
-
     while (!copy.empty())
     {
         std::vector<CGraphNode *> set;
@@ -61,7 +50,7 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
             if ((*it)->visited == 1)
             {
                 printf("copy remove ...\n");
-                printf("remove x: %f, y:%f\n", (((CPoint<double>*)(*it)->content)->_x,((CPoint<double>*)(*it)->content)->_y));
+                printf("remove x: %f, y:%f\n", ((CPoint<double>*)(*it)->content)->_x,((CPoint<double>*)(*it)->content)->_y);
                 set.push_back(*it);
                 copy.erase(it++);
                 printf("set size %d...\n", set.size());
@@ -70,7 +59,7 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
             else
             {
                 printf("jump...\n");
-                printf("jump x: %f, y:%f\n", (((CPoint<double>*)(*it)->content)->_x,((CPoint<double>*)(*it)->content)->_y));
+                printf("jump x: %f, y:%f\n", ((CPoint<double>*)(*it)->content)->_x,((CPoint<double>*)(*it)->content)->_y);
                 it++;
             }
         }
