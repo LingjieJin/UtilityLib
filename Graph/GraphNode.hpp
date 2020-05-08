@@ -1,39 +1,23 @@
+#ifndef GRAPHNODE_HPP
+#define GRAPHNODE_HPP
+
 #include <vector>
 #include <list>
+#include <queue>
 
 class CGraphNode
 {
-private:
-    /* data */
 public:
-    CGraphNode(/* args */){}
-    ~CGraphNode(){}
+    CGraphNode() { visited = 0; content = NULL;}
+    ~CGraphNode() {}
 
-    std::list<CGraphNode*> m_AdjNode;
+    void* content;
+    std::vector<CGraphNode *> m_relation;
     bool visited;
-};
 
-class CGraph
-{
-    public:
-    template<typename T>
-    CGraph(std::vector<T> vec){}
-
-};
-
-class CGraphAlgorithm
-{
-private:
-    /* data */
-public:
-    CGraphAlgorithm(/* args */);
-    ~CGraphAlgorithm();
-};
-
-class CGraphAlgorithm_BFS
-{
-    public:
-        int getGraphNodeSet(std::vector<CGraphNode*>)
+    static void visitedByBFS(CGraphNode *node);
+    static void spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<std::vector<CGraphNode *>> &sets);
 };
 
 
+#endif

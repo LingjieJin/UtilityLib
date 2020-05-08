@@ -62,14 +62,6 @@ public:
     CPoint<T> _p1;
     CPoint<T> _p2;
     
-    CLine()
-    {
-        _p1._x = 0;
-        _p1._y = 0;
-        _p2._x = 0;
-        _p2._y = 0;
-    }
-
     CLine<T>()
     {
         _p1._x = 0;
