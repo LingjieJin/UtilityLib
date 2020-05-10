@@ -20,14 +20,13 @@
 ！！！C++11编译时候，宏和字符串之间需要加空格区分！！！
 */
 
-#define DEBUG_SW
-
 #ifdef DEBUG_SW
 #define DPRINTF(fmt,...) (\
                             fprintf(stdout,"-D- File:<%s>, Function:[%s], Line:%05d ",__FILE__,__FUNCTION__,__LINE__),\
                             fprintf(stdout, fmt, ##__VA_ARGS__),\
                             fprintf(stdout, "\n")\
                             )
+
 #ifdef GCC
 #define PRINTF(fmt,args...) fprintf(stdout, fmt, args)
 #else
@@ -44,11 +43,8 @@
 #endif
 
 
-#define DEBUG_FUNCTION
 #ifdef DEBUG_FUNCTION
-#define
 #endif
-
 
 
 #endif

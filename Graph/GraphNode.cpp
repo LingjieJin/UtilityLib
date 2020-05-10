@@ -1,6 +1,17 @@
 #include "GraphNode.hpp"
 #include "../Polygon/Polygon.hpp"
+#include "../Log/Debug.h"
+
 #include <stdio.h>
+
+void CGraphNode::getReference(std::vector<CGraphNode> &src, std::vector<CGraphNode *> &ref)
+{
+    for (int i = 0; i < src.size(); i++)
+    {
+        ref.push_back(&src[i]);
+    }
+    
+}
 
 void CGraphNode::visitedByBFS(CGraphNode *node)
 {
@@ -12,7 +23,7 @@ void CGraphNode::visitedByBFS(CGraphNode *node)
     {
         CGraphNode *front = help_que.front();
 
-        F_LOGI("Need to visit %d elements\n", front->m_relation.size());
+        DPRINTF("Need to visit %ld elements\n", front->m_relation.size());
 
         for (int i = 0; i < front->m_relation.size(); i++)
         {
@@ -39,10 +50,10 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
         std::vector<CGraphNode *> set;
 
         CGraphNode *front = copy.front();
-        F_LOGI("visited copy...\n");
+        DPRINTF("visited copy...\n");
         visitedByBFS(front);
-        F_LOGI("visited copy end...\n");
-       
+        DPRINTF("visited copy end...\n");
+
         // 遍历copy中的所有元素
         // 查看是否被访问过
         // 如果访问过，证明是在同一个集合中，保存，放入输出MultiSet中
@@ -54,7 +65,7 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
             {
                 set.push_back(*it);
                 copy.erase(it);
-                DEBUG_PRINTF("src size:%d, copy size:%d, set size:%d\n",graph.size(), copy.size(), set.size());
+                DPRINTF("src size:%ld, copy size:%ld, set size:%ld\n", graph.size(), copy.size(), set.size());
             }
             else
             {
@@ -63,5 +74,5 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
         }
         sets.push_back(set);
     }
-    F_LOGI("Sets size:%d\n",sets.size());
+    DPRINTF("Sets size:%ld\n", sets.size());
 }

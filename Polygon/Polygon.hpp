@@ -1,8 +1,8 @@
 #ifndef CPOLYGON_HPP
 #define CPOLYGON_HPP
 
+#include <sstream>
 #include <vector>
-
 #include <cmath>
 
 template <class T>
@@ -53,6 +53,15 @@ public:
     }
 
     ~CPoint() {}
+
+    std::string ToString()
+    {
+        std::ostringstream ret;
+
+        ret <<"X:" << _x << " ,Y:" << _y << " ";
+
+        return ret.str();
+    }
 };
 
 template <class T>
