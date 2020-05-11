@@ -4,13 +4,15 @@
 
 #include <stdio.h>
 
-void CGraphNode::getReference(std::vector<CGraphNode> &src, std::vector<CGraphNode *> &ref)
+std::vector<CGraphNode *> CGraphNode::getReference(std::vector<CGraphNode> &src)
 {
+    std::vector<CGraphNode *> ref;
+   
     for (int i = 0; i < src.size(); i++)
     {
         ref.push_back(&src[i]);
     }
-    
+    return ref;
 }
 
 void CGraphNode::visitedByBFS(CGraphNode *node)
@@ -37,13 +39,14 @@ void CGraphNode::visitedByBFS(CGraphNode *node)
     }
 }
 
-void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<std::vector<CGraphNode *>> &sets)
+std::vector<std::vector<CGraphNode *>> CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph)
 {
-    // clean sets
-    sets.clear();
+    // sets
+    std::vector<std::vector<CGraphNode *>> sets;
 
     // copy elements
-    std::vector<CGraphNode *> copy = graph;
+    std::vector<CGraphNode *>
+        copy = graph;
 
     while (!copy.empty())
     {
@@ -75,4 +78,6 @@ void CGraphNode::spiltNodesToSets(std::vector<CGraphNode *> &graph, std::vector<
         sets.push_back(set);
     }
     DPRINTF("Sets size:%ld\n", sets.size());
+
+    return sets;
 }
