@@ -18,6 +18,10 @@ public:
     IPolygonAlgorithmBase<T>() {}
     virtual ~IPolygonAlgorithmBase() {}
 
+    /* 获取两点之间的距离 */
+    T getDistance(CPoint<T> &p1, CPoint<T> &p2);
+
+
     /*判断点是否在线段上*/
     virtual bool isPointOnLine(T p0_x, T p0_y, T p1_x, T p1_y, T p2_x, T p2_y);
     /*判断点是否在线段上*/
