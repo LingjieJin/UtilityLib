@@ -15,7 +15,7 @@ public:
      * 判断点是否在矩形内
      * 不包括矩形边上
      */
-    bool isPointInRect(double x, double y, CRect<T> &rect)
+    bool isPointInRect(T x, T y, CRect<T> &rect)
     {
         if (x > rect.p_min._x && x < rect.p_max._x && y > rect.p_min._y && y < rect.p_max._y)
             return true;
@@ -26,13 +26,13 @@ public:
      * 判断点是否在多边形内
      * 不包括多边形边上
      */
-    bool isPointInPolygon(double x, double y, const CPolygon<T> &p)
+    bool isPointInPolygon(T x, T y, const CPolygon<T> &p)
     {
         bool isInside = false;
         int count = 0;
 
         // quickly check
-        CRect r = getPolygonEnvelopRect(p);
+        CRect<T> r = IPolygonAlgorithmBase<T>::getPolygonEnvelopRect(p);
         if (!isPointInRect(x, y, r))
         {
             return false;
@@ -63,7 +63,7 @@ public:
             double cx2 = p._vecPoints[(i + 1) % p._vecPoints.size()]._x;
             double cy2 = p._vecPoints[(i + 1) % p._vecPoints.size()]._y;
 
-            if (isPointOnLine(px, py, cx1, cy1, cx2, cy2))
+            if (IPolygonAlgorithmBase<T>::isPointOnLine(px, py, cx1, cy1, cx2, cy2))
             {
                 return false;
             }
@@ -73,14 +73,14 @@ public:
                 continue;
             }
 
-            if (isPointOnLine(cx1, cy1, linePoint1x, linePoint1y, linePoint2x, linePoint2y))
+            if (IPolygonAlgorithmBase<T>::isPointOnLine(cx1, cy1, linePoint1x, linePoint1y, linePoint2x, linePoint2y))
             {
                 if (cy1 > cy2) //只保证上端点+1
                 {
                     count++;
                 }
             }
-            else if (isPointOnLine(cx2, cy2, linePoint1x, linePoint1y, linePoint2x, linePoint2y))
+            else if (IPolygonAlgorithmBase<T>::isPointOnLine(cx2, cy2, linePoint1x, linePoint1y, linePoint2x, linePoint2y))
             {
                 if (cy2 > cy1) //只保证上端点+1
                 {
@@ -106,7 +106,7 @@ public:
      * 如果线段交于一点
      * 不算相交
      */
-    bool isLineIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+    bool isLineIntersect(T x1, T y1, T x2, T y2, T x3, T y3, T x4, T y4)
     {
         /**
          * 快速排斥：

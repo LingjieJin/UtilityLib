@@ -36,10 +36,12 @@ public:
         _y += p._y;
     }
 
-    CPoint<T> &operator=(const CPoint<T> &p) const
+    CPoint<T> operator=(const CPoint<T> &p)
     {
-        _x = p._x;
-        _y = p._y;
+        CPoint<T> ret;
+        ret._x = p._x;
+        ret._y = p._y;
+        return ret;
     }
 
     bool operator==(const CPoint<T> &point) const
@@ -58,7 +60,7 @@ public:
     {
         std::ostringstream ret;
 
-        ret <<"X:" << _x << " ,Y:" << _y << " ";
+        ret << "X:" << _x << " ,Y:" << _y << " ";
 
         return ret.str();
     }
@@ -70,7 +72,7 @@ class CLine
 public:
     CPoint<T> _p1;
     CPoint<T> _p2;
-    
+
     CLine<T>()
     {
         _p1._x = 0;
@@ -99,9 +101,22 @@ public:
 };
 
 template <class T>
+class CLongLine
+{
+public:
+    std::vector<CPoint<T>> v_points;
+
+    CLongLine()
+    {
+    }
+
+    ~CLongLine() {}
+};
+
+template <class T>
 class CTriangle
 {
-    public:
+public:
     CPoint<T> _p1;
     CPoint<T> _p2;
     CPoint<T> _p3;
