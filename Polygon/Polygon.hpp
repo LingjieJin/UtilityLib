@@ -30,18 +30,34 @@ public:
         _y = p._y;
     }
 
-    CPoint<T> operator+(const CPoint<T> &p) const
+    CPoint<T> operator+(const CPoint<T> &p)
     {
-        _x += p._x;
-        _y += p._y;
+        CPoint<T> temp;
+        temp._x = this->_x + p._x;
+        temp._y = this->_y + p._y;
+        return temp;
     }
 
-    CPoint<T> operator=(const CPoint<T> &p)
+    CPoint<T> operator-(const CPoint<T> &p)
     {
-        CPoint<T> ret;
-        ret._x = p._x;
-        ret._y = p._y;
-        return ret;
+        CPoint<T> temp;
+        temp._x = this->_x - p._x;
+        temp._y = this->_y - p._y;
+        return temp;
+    }
+
+    friend CPoint<T> operator+(const CPoint<T> &p1, const CPoint<T> &p2)
+    {
+        CPoint<T> temp;
+        temp._x = p1._x + p2._x;
+        temp._y = p1._y + p2._y;
+        return temp;
+    }
+
+    CPoint<T> operator+=(const CPoint<T> &p)
+    {
+        this->_x += p._x;
+        this->_y += p._y;
     }
 
     bool operator==(const CPoint<T> &point) const
