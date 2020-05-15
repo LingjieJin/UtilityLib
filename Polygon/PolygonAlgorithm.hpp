@@ -19,7 +19,7 @@ public:
     virtual ~IPolygonAlgorithmBase() {}
 
     /* 获取两点之间的距离 */
-    T getDistance(CPoint<T> &p1, CPoint<T> &p2);
+    T getDistance(const CPoint<T> &p1,const CPoint<T> &p2);
 
 
     /*判断点是否在线段上*/
@@ -88,6 +88,12 @@ public:
      */
     virtual double calPolygonArea(std::vector<CPoint<T>> &polygon);
 };
+
+template<class T>
+T IPolygonAlgorithmBase<T>::getDistance(const CPoint<T> &p1,const CPoint<T> &p2)
+{
+    return sqrt((p1._x-p2._x)*(p1._x-p2._x) + (p1._y - p2._y) * (p1._y - p2._y));
+}
 
 template <class T>
 bool IPolygonAlgorithmBase<T>::isPointOnLine(T p0_x, T p0_y, T p1_x, T p1_y, T p2_x, T p2_y)
@@ -396,11 +402,8 @@ void IPolygonAlgorithmBase<T>::spiltPolygon(const CLongLine<T> &line,
             break;
         }
     }
-
     DPRINTF("i:%d cross x:%f, y%f\n", i, c1._x, c1._y);
-    std::cout << c1._x << "," << c1._y << std::endl;
-
-    //
+    
     for (i = 0; i < copy_polygon.size(); i++)
     {
         if (isLineIntersect(copy_polygon[i], copy_polygon[(i + 1) % copy_polygon.size()], l2p1, l2p2))
@@ -412,8 +415,8 @@ void IPolygonAlgorithmBase<T>::spiltPolygon(const CLongLine<T> &line,
         }
     }
     DPRINTF("i:%d cross x:%f, y%f\n", i, c2._x, c2._y);
-    std::cout << c2._x << "," << c2._y << std::endl;
 
+    // 
     if (lable1 >= lable2)
     {
         for (i = lable1 + 1; i <= lable2 + copy_polygon.size(); i++)

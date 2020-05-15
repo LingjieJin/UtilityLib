@@ -54,10 +54,12 @@ public:
         return temp;
     }
 
-    CPoint<T> operator+=(const CPoint<T> &p)
+    CPoint<T>& operator+=(const CPoint<T> &p)
     {
         this->_x += p._x;
         this->_y += p._y;
+        
+        return this;
     }
 
     bool operator==(const CPoint<T> &point) const

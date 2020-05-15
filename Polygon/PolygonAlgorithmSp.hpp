@@ -8,8 +8,8 @@ template <class T>
 class ISpPolygonAlgorithm : public IPolygonAlgorithmBase<T>
 {
 public:
-    ISpPolygonAlgorithm() {}
-    ~ISpPolygonAlgorithm() {}
+    ISpPolygonAlgorithm<T>() {}
+    ~ISpPolygonAlgorithm<T>() {}
 
     /**
      * 判断点是否在矩形内
